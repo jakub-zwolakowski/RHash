@@ -129,6 +129,7 @@ void rhash_swap_copy_u64_to_str(void* to, const void* from, size_t length);
 void rhash_u32_mem_swap(unsigned* p, int length_in_u32);
 
 /* bswap definitions */
+#ifndef __TRUSTINSOFT_ANALYZER__
 #if (defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3)) || \
     (defined(__clang__) && __has_builtin(__builtin_bswap32) && __has_builtin(__builtin_bswap64))
 /* GCC >= 4.3 or clang */
@@ -161,6 +162,9 @@ static RHASH_INLINE uint64_t bswap_64(uint64_t x)
 	return r.ll;
 }
 #endif /* bswap definitions */
+#else
+#include "tis/byteswap.h"
+#endif /* __TRUSTINSOFT_ANALYZER__ */
 
 #if IS_BIG_ENDIAN
 # define be2me_32(x) (x)
