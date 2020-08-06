@@ -73,6 +73,7 @@ unsigned rhash_ctz(unsigned x)
  */
 void rhash_swap_copy_str_to_u32(void* to, int index, const void* from, size_t length)
 {
+	#ifndef __TRUSTINSOFT_ANALYZER__
 	/* if all pointers and length are 32-bits aligned */
 	if ( 0 == (( (int)((char*)to - (char*)0) | ((char*)from - (char*)0) | index | length ) & 3) ) {
 		/* copy memory as 32-bit words */
@@ -82,10 +83,13 @@ void rhash_swap_copy_str_to_u32(void* to, int index, const void* from, size_t le
 		for (; src < end; dst++, src++)
 			*dst = bswap_32(*src);
 	} else {
+	#endif
 		const char* src = (const char*)from;
 		for (length += index; (size_t)index < length; index++)
 			((char*)to)[index ^ 3] = *(src++);
+	#ifndef __TRUSTINSOFT_ANALYZER__
 	}
+	#endif
 }
 
 /**
