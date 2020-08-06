@@ -25,3 +25,4 @@ config.mak
 tis_symbols.tbl
 *_generated
 *_generated.json
+__vfs-tis-*.[c|h]
