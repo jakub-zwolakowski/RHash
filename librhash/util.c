@@ -15,7 +15,7 @@
  */
 #include "util.h"
 
-#if defined(HAS_POSIX_ALIGNED_ALLOC)
+#if defined(HAS_POSIX_ALIGNED_ALLOC) && !defined(__TRUSTINSOFT_ANALYZER__)
 
 #include <errno.h>
 
@@ -40,7 +40,11 @@ void* rhash_aligned_alloc(size_t alignment, size_t size)
 	if (block) {
 		const size_t alignment_mask = (alignment - 1);
 		unsigned char* basement = block + sizeof(void*);
+		#ifdef __TRUSTINSOFT_ANALYZER__
+		size_t offset = 0;
+		#else
 		size_t offset = ((unsigned char*)0 - basement) & alignment_mask;
+		#endif
 		void** result = (void**)(basement + offset);
 		assert((((unsigned char*)result - (unsigned char*)0) % alignment) == 0);
 		result[-1] = block; /* store original pointer */

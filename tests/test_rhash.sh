@@ -151,6 +151,8 @@ new_test "test with a text string:    "
 TEST_RESULT=$( $rhash --message "abc" | tail -1 )
 TEST_EXPECTED="(message) 352441C2"
 check "$TEST_RESULT" "$TEST_EXPECTED"
+echo "--message \"abc\""
+echo "(message) 352441C2"
 
 new_test "test stdin processing:      "
 TEST_STR="test_string1"

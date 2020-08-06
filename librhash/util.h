@@ -39,7 +39,7 @@ extern "C" {
 # define rhash_aligned_alloc(alignment, size) _aligned_malloc((size), (alignment))
 # define rhash_aligned_free(ptr) _aligned_free(ptr)
 
-#elif (__STDC_VERSION__ >= 201112L || defined(_ISOC11_SOURCE)) && !defined(__APPLE__)
+#elif (__STDC_VERSION__ >= 201112L || defined(_ISOC11_SOURCE)) && !defined(__APPLE__) && !defined(__TRUSTINSOFT_ANALYZER__)
 
 # define HAS_STDC_ALIGNED_ALLOC
 # include <stdlib.h>
@@ -50,7 +50,7 @@ extern "C" {
 
 # include "ustd.h" /* for _POSIX_VERSION macro */
 
-# if _POSIX_VERSION >= 200112L || _XOPEN_SOURCE >= 600
+# if (_POSIX_VERSION >= 200112L || _XOPEN_SOURCE >= 600) && !defined(__TRUSTINSOFT_ANALYZER__)
 
 #  define HAS_POSIX_ALIGNED_ALLOC
 #  include <stdlib.h>
