@@ -163,7 +163,7 @@ static RHASH_INLINE uint64_t bswap_64(uint64_t x)
 }
 #endif /* bswap definitions */
 #else
-#include "tis/byteswap.h"
+#include "trustinsoft/byteswap.h"
 #endif /* __TRUSTINSOFT_ANALYZER__ */
 
 #if IS_BIG_ENDIAN
