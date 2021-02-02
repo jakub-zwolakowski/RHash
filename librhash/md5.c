@@ -194,6 +194,9 @@ void rhash_md5_update(md5_ctx* ctx, const unsigned char* msg, size_t size)
 		size -= md5_block_size;
 	}
 	if (size) {
+	#ifdef __TRUSTINSOFT_ANALYZER__
+		memset(ctx->message, 0, sizeof(ctx->message));
+	#endif
 		/* save leftovers */
 		le32_copy(ctx->message, 0, msg, size);
 	}
