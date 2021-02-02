@@ -31,10 +31,16 @@ void* rhash_px_aalloc(size_t alignment, size_t size)
 
 #include <assert.h>
 #include <stdlib.h>
+#ifdef __TRUSTINSOFT_BUGFIX__
+#include <string.h>
+#endif
 
 void* rhash_aligned_alloc(size_t alignment, size_t size)
 {
 	unsigned char* block = (unsigned char*)malloc(size + alignment);
+#ifdef __TRUSTINSOFT_BUGFIX__
+	memset((void *) block, 0, size + alignment);
+#endif
 	assert((alignment & (alignment - 1)) == 0);
 	assert(alignment >= sizeof(void*));
 	if (block) {
