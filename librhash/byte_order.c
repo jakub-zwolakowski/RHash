@@ -73,7 +73,7 @@ unsigned rhash_ctz(unsigned x)
  */
 void rhash_swap_copy_str_to_u32(void* to, int index, const void* from, size_t length)
 {
-	#ifndef __TRUSTINSOFT_ANALYZER__
+	// #ifndef __TRUSTINSOFT_ANALYZER__
 	/* if all pointers and length are 32-bits aligned */
 	if ( 0 == (( (int)((char*)to - (char*)0) | ((char*)from - (char*)0) | index | length ) & 3) ) {
 		/* copy memory as 32-bit words */
@@ -83,13 +83,13 @@ void rhash_swap_copy_str_to_u32(void* to, int index, const void* from, size_t le
 		for (; src < end; dst++, src++)
 			*dst = bswap_32(*src);
 	} else {
-	#endif
+	// #endif
 		const char* src = (const char*)from;
 		for (length += index; (size_t)index < length; index++)
 			((char*)to)[index ^ 3] = *(src++);
-	#ifndef __TRUSTINSOFT_ANALYZER__
+	// #ifndef __TRUSTINSOFT_ANALYZER__
 	}
-	#endif
+	// #endif
 }
 
 /**
@@ -104,7 +104,7 @@ void rhash_swap_copy_str_to_u32(void* to, int index, const void* from, size_t le
  */
 void rhash_swap_copy_str_to_u64(void* to, int index, const void* from, size_t length)
 {
-	#ifndef __TRUSTINSOFT_ANALYZER__
+	// #ifndef __TRUSTINSOFT_ANALYZER__
 	/* if all pointers and length are 64-bits aligned */
 	if ( 0 == (( (int)((char*)to - (char*)0) | ((char*)from - (char*)0) | index | length ) & 7) ) {
 		/* copy aligned memory block as 64-bit integers */
@@ -113,12 +113,12 @@ void rhash_swap_copy_str_to_u64(void* to, int index, const void* from, size_t le
 		uint64_t* dst = (uint64_t*)((char*)to + index);
 		while (src < end) *(dst++) = bswap_64( *(src++) );
 	} else {
-	#endif
+	// #endif
 		const char* src = (const char*)from;
 		for (length += index; (size_t)index < length; index++) ((char*)to)[index ^ 7] = *(src++);
-	#ifndef __TRUSTINSOFT_ANALYZER__
+	// #ifndef __TRUSTINSOFT_ANALYZER__
 	}
-	#endif
+	// #endif
 }
 
 /**
@@ -131,7 +131,7 @@ void rhash_swap_copy_str_to_u64(void* to, int index, const void* from, size_t le
  */
 void rhash_swap_copy_u64_to_str(void* to, const void* from, size_t length)
 {
-	#ifndef __TRUSTINSOFT_ANALYZER__
+	// #ifndef __TRUSTINSOFT_ANALYZER__
 	/* if all pointers and length are 64-bits aligned */
 	if ( 0 == (( (int)((char*)to - (char*)0) | ((char*)from - (char*)0) | length ) & 7) ) {
 		/* copy aligned memory block as 64-bit integers */
@@ -140,13 +140,13 @@ void rhash_swap_copy_u64_to_str(void* to, const void* from, size_t length)
 		uint64_t* dst = (uint64_t*)to;
 		while (src < end) *(dst++) = bswap_64( *(src++) );
 	} else {
-	#endif
+	// #endif
 		size_t index;
 		char* dst = (char*)to;
 		for (index = 0; index < length; index++) *(dst++) = ((char*)from)[index ^ 7];
-	#ifndef __TRUSTINSOFT_ANALYZER__
+	// #ifndef __TRUSTINSOFT_ANALYZER__
 	}
-	#endif
+	// #endif
 }
 
 /**
