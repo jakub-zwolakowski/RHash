@@ -39,7 +39,8 @@ extern "C" {
 # define rhash_aligned_alloc(alignment, size) _aligned_malloc((size), (alignment))
 # define rhash_aligned_free(ptr) _aligned_free(ptr)
 
-#elif (__STDC_VERSION__ >= 201112L || defined(_ISOC11_SOURCE)) && !defined(__APPLE__) && !defined(__TRUSTINSOFT_ANALYZER__)
+#elif (__STDC_VERSION__ >= 201112L || defined(_ISOC11_SOURCE)) && !defined(__APPLE__)
+// NOTE: __TRUSTINSOFT__: ONE VERSION TO CHECK
 
 # define HAS_STDC_ALIGNED_ALLOC
 # include <stdlib.h>
@@ -47,6 +48,7 @@ extern "C" {
 # define rhash_aligned_free(ptr) free(ptr)
 
 #else /* defined(_WIN32) ... */
+// NOTE: __TRUSTINSOFT__: ANOTHER VERSION TO CHECK
 
 # include "ustd.h" /* for _POSIX_VERSION macro */
 

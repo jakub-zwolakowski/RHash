@@ -30,9 +30,17 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 #include <errno.h>
 
 int posix_memalign(void **memptr, size_t alignment, size_t size) {
-  *memptr = malloc(alignment * size);
+  *memptr = malloc(size);
   if(*memptr)
     return 0;
   else
     return ENOMEM;
+}
+
+#include <string.h>
+
+void *aligned_alloc(size_t alignment, size_t size) {
+  void *ptr = malloc(size);
+  memset(ptr, 0, size);
+  return ptr;
 }

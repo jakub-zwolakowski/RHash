@@ -28,7 +28,7 @@ void* rhash_px_aalloc(size_t alignment, size_t size)
 	if ((errno = posix_memalign(&ptr, alignment, size)) != 0)
 		return NULL;
 #ifdef __TRUSTINSOFT_BUGFIX__
-	memset(ptr, 0, size + alignment);
+	memset(ptr, 0, size);
 #endif
 	return ptr;
 }
@@ -41,19 +41,12 @@ void* rhash_px_aalloc(size_t alignment, size_t size)
 void* rhash_aligned_alloc(size_t alignment, size_t size)
 {
 	unsigned char* block = (unsigned char*)malloc(size + alignment);
-#ifdef __TRUSTINSOFT_BUGFIX__
-	memset((void *) block, 0, size + alignment);
-#endif
 	assert((alignment & (alignment - 1)) == 0);
 	assert(alignment >= sizeof(void*));
 	if (block) {
 		const size_t alignment_mask = (alignment - 1);
 		unsigned char* basement = block + sizeof(void*);
-		#ifdef __TRUSTINSOFT_ANALYZER__
-		size_t offset = 0;
-		#else
 		size_t offset = ((unsigned char*)0 - basement) & alignment_mask;
-		#endif
 		void** result = (void**)(basement + offset);
 		assert((((unsigned char*)result - (unsigned char*)0) % alignment) == 0);
 		result[-1] = block; /* store original pointer */
