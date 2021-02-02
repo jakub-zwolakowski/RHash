@@ -25,3 +25,14 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
   tv->tv_usec = 455745;
   return 0;
 }
+
+#include <stdlib.h>
+#include <errno.h>
+
+int posix_memalign(void **memptr, size_t alignment, size_t size) {
+  *memptr = malloc(alignment * size);
+  if(*memptr)
+    return 0;
+  else
+    return ENOMEM;
+}

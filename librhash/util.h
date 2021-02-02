@@ -50,7 +50,7 @@ extern "C" {
 
 # include "ustd.h" /* for _POSIX_VERSION macro */
 
-# if (_POSIX_VERSION >= 200112L || _XOPEN_SOURCE >= 600) && !defined(__TRUSTINSOFT_ANALYZER__)
+# if (_POSIX_VERSION >= 200112L || _XOPEN_SOURCE >= 600)
 
 #  define HAS_POSIX_ALIGNED_ALLOC
 #  include <stdlib.h>
