@@ -822,7 +822,7 @@ if (count++ == TEST_LONG_STRINGS_CASE)
 	assert_rep_hash(RHASH_AICH, 0, 9728000 * 5, "EZCO3XF2RJ4FERRDEXGOSSRGL5NA5BBM", 0);
 #endif
 #if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-	exit (1);
+	exit (42);
 #endif
 }
 
