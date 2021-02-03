@@ -81,13 +81,13 @@ extern "C" {
 # define __has_builtin(x) 0
 #endif
 
-// #ifndef __TRUSTINSOFT_ANALYZER__
+#ifndef __TRUSTINSOFT_ANALYZER__
 #define IS_ALIGNED_32(p) (0 == (3 & ((const char*)(p) - (const char*)0)))
 #define IS_ALIGNED_64(p) (0 == (7 & ((const char*)(p) - (const char*)0)))
-// #else
-// #define IS_ALIGNED_32(p) (0)
-// #define IS_ALIGNED_64(p) (0)
-// #endif
+#else
+#define IS_ALIGNED_32(p) (0)
+#define IS_ALIGNED_64(p) (0)
+#endif
 
 #if defined(_MSC_VER)
 #define ALIGN_ATTR(n) __declspec(align(n))
