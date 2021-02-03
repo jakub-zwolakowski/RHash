@@ -16,6 +16,8 @@ time_t time(time_t *timer) {
   return __CURRENT_TIME;
 }
 
+#include <stdlib.h>
+
 struct tm *localtime(const time_t *timer) {
   return NULL;
 }
@@ -26,7 +28,6 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
   return 0;
 }
 
-#include <stdlib.h>
 #include <errno.h>
 
 int posix_memalign(void **memptr, size_t alignment, size_t size) {
