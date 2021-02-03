@@ -617,7 +617,6 @@ static void assert_hash_long_msg(unsigned hash_id, const char* msg_chunk, size_t
 #ifdef __TRUSTINSOFT_ANALYZER__
 	else {
 		printf("OK!\n");
-		exit(42);
 	}
 #endif
 }
@@ -840,7 +839,7 @@ static void tis_test_long_strings(void)
 		{ RHASH_EDONR512, "EDONR512", "053E46938DA60A865297A20DEF6B2A05DAE7CD61B64025DA27E9E55E32A7722B3A806D99380A95FFD7BF076E9A186F8CBBD488BB0D9DC057C222255492CA261B" },
 		{ RHASH_GOST12_256, "GOST12_256", "E770017612EE6F0BD6DC188268C5DD331E08BAD7203153B7A606386D486AEBD7" },
 		{ RHASH_GOST12_512, "GOST12_512", "15B744F8A6131244ED96D4F351F2DF78BAB88861E1A3C8743123969F8D924DA24FAAF6AEC9480007C0A7C9EB41FB000D08C769A1DE581597F988C0346CE16C58" },
-		{ RHASH_BTIH, "BTIH", "90AE73EE72A12B5A3A39DCA4C5E24BE1F39B6A1B" } /* TODO */ /* BTIH with filename="test.txt" */
+		{ RHASH_BTIH, "BTIH", "66AB03163911837DF8FCD83FBBE67D14761E6A47" } /* BTIH with filename="test.txt" */
 	};
 
 	/* test all algorithms on 1,000,000 characters of 'a' */
@@ -857,7 +856,7 @@ static void tis_test_long_strings(void)
 	if (count++ == TEST_LONG_STRINGS_CASE)
 		printf("count == %u\n", count),
 #endif
-	assert_rep_hash(RHASH_BTIH, 'a', 1000, "5B602BBABA7BE3760209CF6FC9DA3021122C84ED", 0);
+	assert_rep_hash(RHASH_BTIH, 'a', 1000, "B99731F317F9FB4B5FA24D616B1EF5B59A063C1C", 0);
 
 	/* now we verify some specific cases, which caused problems in many libraries */
 #if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
@@ -870,10 +869,6 @@ static void tis_test_long_strings(void)
 		printf("count == %u\n", count),
 #endif
 	assert_rep_hash(RHASH_GOST94_CRYPTOPRO, 0xFF, 64, "58504D26B3677E756BA3F4A9FD2F14B3BA5457066A4AA1D700659B90DCDDD3C6", 0);
-
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-	exit (19);
-#endif
 }
 
 /**
