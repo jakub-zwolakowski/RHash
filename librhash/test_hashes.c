@@ -600,12 +600,26 @@ static void assert_hash_long_msg(unsigned hash_id, const char* msg_chunk, size_t
 {
 	char* result;
 	result = repeat_hash(hash_id, msg_chunk, chunk_size, msg_size, set_filename);
+#ifdef __TRUSTINSOFT_ANALYZER__
+	/* Print hash and result. */
+	printf("expected hash : %s\n", hash);
+	printf("result        : %s\n", result);
+#endif
 	if (strcmp(result, hash) != 0) {
 		const char* hash_name = rhash_get_name(hash_id); /* the hash function name */
 		if (msg_name) log_message("failed: %s(%s) = %s, expected %s\n", hash_name, msg_name, result, hash);
 		else log_message("failed: %s(\"%s\") = %s, expected %s\n", hash_name, msg_chunk, result, hash);
 		g_errors++;
+#ifdef __TRUSTINSOFT_ANALYZER__
+		exit(1);
+#endif
 	}
+#ifdef __TRUSTINSOFT_ANALYZER__
+	else {
+		printf("OK!\n");
+		exit(42);
+	}
+#endif
 }
 
 /**
@@ -759,12 +773,78 @@ static void test_long_strings(void)
 
 	/* test all algorithms on 1,000,000 characters of 'a' */
 	for (count = 0; count < (sizeof(tests) / sizeof(id_to_hash_t)); count++) {
+		int set_filename = (tests[count].hash_id == RHASH_BTIH);
+		assert_rep_hash(tests[count].hash_id, 'a', 1000000, tests[count].expected_hash, set_filename);
+	}
+	
+	/* BTIH calculated without a filename. The hash value can't be verified by torrent tools */
+	assert_rep_hash(RHASH_BTIH, 'a', 1000, "24742F9AE1BD416CF0A6916F2849FE7ABFAC405E", 0);
+
+	/* now we verify some specific cases, which caused problems in many libraries */
+	assert_rep_hash(RHASH_GOST94, 0xFF, 64, "13416C4EC74A63C3EC90CB1748FD462C7572C6C6B41844E48CC1184D1E916098", 0);
+	assert_rep_hash(RHASH_GOST94_CRYPTOPRO, 0xFF, 64, "58504D26B3677E756BA3F4A9FD2F14B3BA5457066A4AA1D700659B90DCDDD3C6", 0);
+
+	/* these messages verified by eMule LinkCreator (which uses eMule variant of ED2K hash) */
+	assert_rep_hash(RHASH_ED2K, 0, 9728000, "FC21D9AF828F92A8DF64BEAC3357425D", 0);
+	assert_rep_hash(RHASH_ED2K, 0, 9728000 - 1, "AC44B93FC9AFF773AB0005C911F8396F", 0);
+	assert_rep_hash(RHASH_ED2K, 0, 9728000 + 1, "06329E9DBA1373512C06386FE29E3C65", 0); /* msg with: 9728000 < size <= 9732096 */
+	assert_rep_hash(RHASH_AICH, 0, 9728000, "5D3N4HQHIUMQ7IU7A5QLPLI6RHSWOR7B", 0);
+	assert_rep_hash(RHASH_AICH, 0, 9728000 - 1, "L6SPMD2CM6PRZBGRQ6UFC4HJFFOATRA4", 0);
+	assert_rep_hash(RHASH_AICH, 0, 9728000 + 1, "HL3TFXORIUEPXUWFPY3JLR7SMKGTO4IH", 0);
+#if 0
+	assert_rep_hash(RHASH_ED2K, 0, 9728000 * 5, "3B613901DABA54F6C0671793E28A1205", 0);
+	assert_rep_hash(RHASH_AICH, 0, 9728000 * 5, "EZCO3XF2RJ4FERRDEXGOSSRGL5NA5BBM", 0);
+#endif
+}
+
+/**
+ * Verify hash algorithms by testing them on long messages, like
+ * 1,000,000 charaters of 'a'.
+ */
+static void tis_test_long_strings(void)
+{
+	unsigned count;
+
+	struct id_to_hash_t tests[] = {
+		{ RHASH_CRC32, "9A38DA03" },
+		{ RHASH_CRC32C, "9F19EF6A" },
+		{ RHASH_MD4, "5F1BF26A8067C9159B91F1440F7C9E8A" },
+		{ RHASH_MD5, "CABE45DCC9AE5B66BA86600CCA6B8BA8" },
+		{ RHASH_SHA1, "291E9A6C66994949B57BA5E650361E98FC36B1BA" },
+		{ RHASH_ED2K, "5F1BF26A8067C9159B91F1440F7C9E8A" },
+		{ RHASH_AICH, "FEPJU3DGTFEUTNL3UXTFANQ6TD6DNMN2" },
+		{ RHASH_TIGER, "42C18814A47B257C40160A80FBE604D949613EE029B31FD9" },
+		{ RHASH_TTH, "4SDOAA6NH6PXLIAL6M3K4PY7JA5IS3LM5SPPLGI" },
+		{ RHASH_WHIRLPOOL, "FE24B173807796FDAC15EBCAF5769F661695601FFEB64490EC0EECD30BD5B2C3773B36D4EDAF3175378B8DF114E9496C833EF13606E7AB3D455681E98ECC818F" },
+		{ RHASH_RIPEMD160, "AA69DEEE9A8922E92F8105E007F76110F381E9CF" },
+		{ RHASH_GOST94_CRYPTOPRO, "CFD707497028E7AFEFDF80F823A0E0171BCDF5EE402BE94E448ACB8FB4AE58F3" },
+		{ RHASH_GOST94, "CC25BB524258320913A4EC4692327BDFC9876FA53777BE4754F0B1C9B40ECB26" },
+		{ RHASH_HAS160, "5A523572FF697F446829FA487031AC036173742E" },
+		{ RHASH_SNEFRU128, "058C475BE7B72AECEF3D1902795BA9D1" },
+		{ RHASH_SNEFRU256, "C5795BAC1192BDEA5A9DBE735211F890AEF23B92687B6002D1938A7876E049C3" },
+		{ RHASH_SHA224, "4E8F0CE90B64661A2B5E84BE6D93A7D9B76871062F1814433D04A03D" },
+		{ RHASH_SHA256, "41EDECE42D63E8D9BF515A9BA6932E1C20CBC9F5A5D134645ADB5DB1B9737EA3" },
+		{ RHASH_SHA384, "F54480689C6B0B11D0303285D9A81B21A93BCA6BA5A1B4472765DCA4DA45EE328082D469C650CD3B61B16D3266AB8CED" },
+		{ RHASH_SHA512, "67BA5535A46E3F86DBFBED8CBBAF0125C76ED549FF8B0B9E03E0C88CF90FA634FA7B12B47D77B694DE488ACE8D9A65967DC96DF599727D3292A8D9D447709C97" },
+		{ RHASH_SHA3_224, "2461344B84416DB8FE01C2A4966FEA019590C231DD5724C1BFC26745" },
+		{ RHASH_SHA3_256, "8F3934E6F7A15698FE0F396B95D8C4440929A8FA6EAE140171C068B4549FBF81" },
+		{ RHASH_SHA3_384, "CCF4495FF20B4B33A1CC1917F9F0FE0FCB5E3D08E542CF4D4A90DD950B748E7E1CC07D2F3B36D62DD240724417CDD81B" },
+		{ RHASH_SHA3_512, "AC7E95CC95AA7F24AAA95E040CA0C79B39CD9CC84A10ABB84DDD8DD5E4B45CF96543AAA70D0EF99FBF8D2769639981EE1FD0B0276F4756B9D504D0B7DE19B700" },
+		{ RHASH_EDONR256, "09B70BCBC5726E7C0B327B469489808AD2DD7A6F800BA4FA2944213063CB07AF" },
+		{ RHASH_EDONR512, "053E46938DA60A865297A20DEF6B2A05DAE7CD61B64025DA27E9E55E32A7722B3A806D99380A95FFD7BF076E9A186F8CBBD488BB0D9DC057C222255492CA261B" },
+		{ RHASH_GOST12_256, "E770017612EE6F0BD6DC188268C5DD331E08BAD7203153B7A606386D486AEBD7" },
+		{ RHASH_GOST12_512, "15B744F8A6131244ED96D4F351F2DF78BAB88861E1A3C8743123969F8D924DA24FAAF6AEC9480007C0A7C9EB41FB000D08C769A1DE581597F988C0346CE16C58" },
+		{ RHASH_BTIH, "90AE73EE72A12B5A3A39DCA4C5E24BE1F39B6A1B" } /* TODO */ /* BTIH with filename="test.txt" */
+	};
+
+	/* test all algorithms on 1,000,000 characters of 'a' */
+	for (count = 0; count < (sizeof(tests) / sizeof(id_to_hash_t)); count++) {
 	#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
 		if (count != TEST_LONG_STRINGS_CASE) continue;
 		printf("count == %u\n", count);
 	#endif
 		int set_filename = (tests[count].hash_id == RHASH_BTIH);
-		assert_rep_hash(tests[count].hash_id, 'a', 1000000, tests[count].expected_hash, set_filename);
+		assert_rep_hash(tests[count].hash_id, 'a', 1000, tests[count].expected_hash, set_filename);
 	}
 	
 	/* BTIH calculated without a filename. The hash value can't be verified by torrent tools */
@@ -772,7 +852,7 @@ static void test_long_strings(void)
 	if (count++ == TEST_LONG_STRINGS_CASE)
 		printf("count == %u\n", count),
 #endif
-	assert_rep_hash(RHASH_BTIH, 'a', 1000000, "24742F9AE1BD416CF0A6916F2849FE7ABFAC405E", 0);
+	assert_rep_hash(RHASH_BTIH, 'a', 1000, "5B602BBABA7BE3760209CF6FC9DA3021122C84ED", 0);
 
 	/* now we verify some specific cases, which caused problems in many libraries */
 #if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
@@ -786,43 +866,8 @@ static void test_long_strings(void)
 #endif
 	assert_rep_hash(RHASH_GOST94_CRYPTOPRO, 0xFF, 64, "58504D26B3677E756BA3F4A9FD2F14B3BA5457066A4AA1D700659B90DCDDD3C6", 0);
 
-	/* these messages verified by eMule LinkCreator (which uses eMule variant of ED2K hash) */
 #if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-if (count++ == TEST_LONG_STRINGS_CASE)
-	printf("count == %u\n", count),
-#endif
-	assert_rep_hash(RHASH_ED2K, 0, 9728000, "FC21D9AF828F92A8DF64BEAC3357425D", 0);
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-if (count++ == TEST_LONG_STRINGS_CASE)
-	printf("count == %u\n", count),
-#endif
-	assert_rep_hash(RHASH_ED2K, 0, 9728000 - 1, "AC44B93FC9AFF773AB0005C911F8396F", 0);
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-if (count++ == TEST_LONG_STRINGS_CASE)
-	printf("count == %u\n", count),
-#endif
-	assert_rep_hash(RHASH_ED2K, 0, 9728000 + 1, "06329E9DBA1373512C06386FE29E3C65", 0); /* msg with: 9728000 < size <= 9732096 */
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-if (count++ == TEST_LONG_STRINGS_CASE)
-	printf("count == %u\n", count),
-#endif
-	assert_rep_hash(RHASH_AICH, 0, 9728000, "5D3N4HQHIUMQ7IU7A5QLPLI6RHSWOR7B", 0);
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-if (count++ == TEST_LONG_STRINGS_CASE)
-	printf("count == %u\n", count),
-#endif
-	assert_rep_hash(RHASH_AICH, 0, 9728000 - 1, "L6SPMD2CM6PRZBGRQ6UFC4HJFFOATRA4", 0);
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-if (count++ == TEST_LONG_STRINGS_CASE)
-	printf("count == %u\n", count),
-#endif
-	assert_rep_hash(RHASH_AICH, 0, 9728000 + 1, "HL3TFXORIUEPXUWFPY3JLR7SMKGTO4IH", 0);
-#if 0
-	assert_rep_hash(RHASH_ED2K, 0, 9728000 * 5, "3B613901DABA54F6C0671793E28A1205", 0);
-	assert_rep_hash(RHASH_AICH, 0, 9728000 * 5, "EZCO3XF2RJ4FERRDEXGOSSRGL5NA5BBM", 0);
-#endif
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-	exit (42);
+	exit (19);
 #endif
 }
 
