@@ -843,7 +843,7 @@ static void tis_test_long_strings(void)
 	};
 
 	/* test all algorithms on 1,000,000 characters of 'a' */
-	for (count = 0; count < (sizeof(tests) / sizeof(id_to_hash_t)); count++) {
+	for (count = 0; count < (sizeof(tests) / sizeof(tis_id_to_hash_t)); count++) {
 		if (count != TEST_LONG_STRINGS_CASE) continue;
 		printf("count == %u\n", count);
 		printf("name == %s\n", tests[count].hash_name);
