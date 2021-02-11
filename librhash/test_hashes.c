@@ -844,8 +844,8 @@ static void tis_test_long_strings(void)
 
 	/* test all algorithms on 10,000 characters of 'a' */
 	for (count = 0; count < (sizeof(tests) / sizeof(tis_id_to_hash_t)); count++) {
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)		
-		if (count != TEST_LONG_STRINGS_CASE) continue;
+#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_CASE)		
+		if (count != TEST_CASE) continue;
 #endif
 		printf("count == %u\n", count);
 		printf("name == %s\n", tests[count].hash_name);
@@ -854,20 +854,20 @@ static void tis_test_long_strings(void)
 	}
 	
 	/* BTIH calculated without a filename. The hash value can't be verified by torrent tools */
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-	if (count++ == TEST_LONG_STRINGS_CASE)
+#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_CASE)
+	if (count++ == TEST_CASE)
 		printf("count == %u\n", count),
 #endif
 	assert_rep_hash(RHASH_BTIH, 'a', 10000, "B99731F317F9FB4B5FA24D616B1EF5B59A063C1C", 0);
 
 	/* now we verify some specific cases, which caused problems in many libraries */
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-	if (count++ == TEST_LONG_STRINGS_CASE)
+#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_CASE)
+	if (count++ == TEST_CASE)
 		printf("count == %u\n", count),
 #endif
 	assert_rep_hash(RHASH_GOST94, 0xFF, 64, "13416C4EC74A63C3EC90CB1748FD462C7572C6C6B41844E48CC1184D1E916098", 0);
-#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS_CASE)
-	if (count++ == TEST_LONG_STRINGS_CASE)
+#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_CASE)
+	if (count++ == TEST_CASE)
 		printf("count == %u\n", count),
 #endif
 	assert_rep_hash(RHASH_GOST94_CRYPTOPRO, 0xFF, 64, "58504D26B3677E756BA3F4A9FD2F14B3BA5457066A4AA1D700659B90DCDDD3C6", 0);
