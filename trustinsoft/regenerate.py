@@ -32,6 +32,15 @@ args = parser.parse_args()
 # Directories.
 common_config_path = path.join("trustinsoft", "common.config")
 
+not_64 = [
+    "-U_LP64",
+    "-U__LP64__",
+    "-U__x86_64",
+    "-U__x86_64__",
+    "-U_M_AMD64",
+    "-U_M_X64",
+]
+
 # Architectures.
 machdeps = [
     {
@@ -39,6 +48,7 @@ machdeps = [
         "pretty_name": "little endian 32-bit (x86)",
         "fields": {
             "address-alignment": 32,
+            "cpp-extra-args": not_64
         }
     },
     {
@@ -53,6 +63,7 @@ machdeps = [
         "pretty_name": "big endian 32-bit (PPC32)",
         "fields": {
             "address-alignment": 32,
+            "cpp-extra-args": not_64
         },
     },
     {
@@ -60,6 +71,7 @@ machdeps = [
         "pretty_name": "big endian 64-bit (PPC64)",
         "fields": {
             "address-alignment": 64,
+            "cpp-extra-args": not_64
         },
     },
 ]
