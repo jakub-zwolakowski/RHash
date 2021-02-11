@@ -237,7 +237,7 @@ rhash_main_tests = [
 
 def make_rhash_main_test(rhash_main_test, machdep):
     test = dict()
-    test["name"] = rhash_main_test["name"]
+    test["name"] = "%s, %s" % (rhash_main_test["name"], machdep["pretty_name"])
     test["files"] = [ "rhash_main.c" ]
     test["include"] = common_config_path
     test["include_"] = path.join("trustinsoft", "%s.config" % machdep["machdep"])
@@ -259,7 +259,7 @@ librhash_tests = [
 def make_librhash_test(librhash_test, machdep):
     test_hashes_C_path = path.join("librhash", "test_hashes.c")
     return {
-        "name": "%s : %s" % (test_hashes_C_path, librhash_test),
+        "name": "%s : %s, %s" % (test_hashes_C_path, librhash_test, machdep["pretty_name"]),
         "main": librhash_test,
         "files": [ test_hashes_C_path ],
         "include": common_config_path,
@@ -269,8 +269,9 @@ def make_librhash_test(librhash_test, machdep):
 tis_test_long_strings_cases = list(range(0, 32))
 
 def make_tis_test_long_strings(case_no, machdep):
+    test_hashes_C_path = path.join("librhash", "test_hashes.c")
     test = make_librhash_test("test_long_strings", machdep)
-    test["name"] += (" : %d" % case_no)
+    test["name"] = "%s : %s : CASE %d, %s" % (test_hashes_C_path, "test_long_strings", case_no, machdep["pretty_name"])
     test["main"] = "tis_test_long_strings"
     test["cpp-extra-args"] = [ "-DTEST_CASE=%d" % case_no ]
     return test
