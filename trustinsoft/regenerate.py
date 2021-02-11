@@ -41,27 +41,27 @@ machdeps = [
             "address-alignment": 32,
         }
     },
-    # {
-    #     "machdep": "gcc_x86_64",
-    #     "pretty_name": "little endian 64-bit (x86)",
-    #     "fields": {
-    #         "address-alignment": 64
-    #     }
-    # },
-    # {
-    #     "machdep": "gcc_ppc_32",
-    #     "pretty_name": "big endian 32-bit (PPC32)",
-    #     "fields": {
-    #         "address-alignment": 32,
-    #     },
-    # },
-    # {
-    #     "machdep": "gcc_ppc_64",
-    #     "pretty_name": "big endian 64-bit (PPC64)",
-    #     "fields": {
-    #         "address-alignment": 64,
-    #     },
-    # },
+    {
+        "machdep": "gcc_x86_64",
+        "pretty_name": "little endian 64-bit (x86)",
+        "fields": {
+            "address-alignment": 64
+        }
+    },
+    {
+        "machdep": "gcc_ppc_32",
+        "pretty_name": "big endian 32-bit (PPC32)",
+        "fields": {
+            "address-alignment": 32,
+        },
+    },
+    {
+        "machdep": "gcc_ppc_64",
+        "pretty_name": "big endian 64-bit (PPC64)",
+        "fields": {
+            "address-alignment": 64,
+        },
+    },
 ]
 
 # --------------------------------------------------------------------------- #
@@ -98,8 +98,6 @@ def make_common_config():
             "-DLOCALEDIR=\"/usr/local/share/locale\""
         ],    
         "val-warn-harmless-function-pointers": False,
-        "machdep": "gcc_x86_32",
-        "address-alignment": 32,
     }
 
 common_config = make_common_config()
@@ -242,6 +240,7 @@ def make_rhash_main_test(rhash_main_test, machdep):
     test["name"] = rhash_main_test["name"]
     test["files"] = [ "rhash_main.c" ]
     test["include"] = common_config_path
+    test["include_"] = path.join("trustinsoft", "%s.config" % machdep["machdep"])
     if "filesystem" in rhash_main_test:
         test["filesystem"] = rhash_main_test["filesystem"]
     if "val-args" in rhash_main_test:
@@ -263,7 +262,8 @@ def make_librhash_test(librhash_test, machdep):
         "name": "%s : %s" % (test_hashes_C_path, librhash_test),
         "main": librhash_test,
         "files": [ test_hashes_C_path ],
-        "include": common_config_path
+        "include": common_config_path,
+        "include_": path.join("trustinsoft", "%s.config" % machdep["machdep"])
     }
 
 tis_test_long_strings_cases = list(range(0, 32))
