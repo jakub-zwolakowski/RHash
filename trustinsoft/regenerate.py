@@ -104,10 +104,11 @@ def make_common_config():
             "-Dvolatile=",
             "-I.",
             "-Ilibrhash",
+            "-DLOCALEDIR=\"/usr/local/share/locale\"",
             "-DNDEBUG",
-            "-UUSE_OPENSSL",
+            "-DRHASH_NO_ASM",
             "-DRHASH_XVERSION=0x01040000",
-            "-DLOCALEDIR=\"/usr/local/share/locale\""
+            "-UUSE_OPENSSL",
         ],    
         "val-warn-harmless-function-pointers": False,
     }
