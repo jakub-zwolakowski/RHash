@@ -262,11 +262,11 @@ def make_rhash_main_test(rhash_main_test, machdep):
 
 librhash_tests = [
     "test_all_known_strings",
-    "test_long_strings",
+    # "test_long_strings",
     "test_results_consistency",
     "test_unaligned_messages_consistency",
     "test_magnet",
-    "main",
+    # "main",
 ]
 
 def make_librhash_test(librhash_test, machdep):
