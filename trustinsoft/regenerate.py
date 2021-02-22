@@ -105,7 +105,7 @@ def make_common_config():
             "-I.",
             "-Ilibrhash",
             "-DLOCALEDIR=\"/usr/local/share/locale\"",
-            "-DNDEBUG",
+            # "-DNDEBUG", # This removes all the assertions!
             "-DRHASH_NO_ASM",
             "-DRHASH_XVERSION=0x01040000",
             "-UUSE_OPENSSL",
