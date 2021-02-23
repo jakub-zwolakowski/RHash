@@ -18,18 +18,18 @@
 #if defined(HAS_POSIX_ALIGNED_ALLOC)
 
 #include <errno.h>
-#ifdef __TRUSTINSOFT_BUGFIX__
-#include <string.h>
-#endif
+// #ifdef __TRUSTINSOFT_BUGFIX__
+// #include <string.h>
+// #endif
 
 void* rhash_px_aalloc(size_t alignment, size_t size)
 {
 	void* ptr;
 	if ((errno = posix_memalign(&ptr, alignment, size)) != 0)
 		return NULL;
-#ifdef __TRUSTINSOFT_BUGFIX__
-	memset(ptr, 0, size);
-#endif
+// #ifdef __TRUSTINSOFT_BUGFIX__
+// 	memset(ptr, 0, size);
+// #endif
 	return ptr;
 }
 
