@@ -551,6 +551,10 @@ static void log_message(char* format, ...)
 	va_end(vl);
 }
 
+#ifdef __TRUSTINSOFT_ANALYZER__
+#include <endian.h>
+#endif
+
 /**
  * Calculate hash of the message specified by chunk string, repeated until
  * the given length is reached.
@@ -579,7 +583,13 @@ static char* repeat_hash(unsigned hash_id, const char* chunk, size_t chunk_size,
 		rhash_update(ctx, (const unsigned char*)chunk, size);
 	}
 	rhash_final(ctx, 0);
+#if defined(__TRUSTINSOFT_BUGFIX__) && \
+    defined(__BYTE_ORDER) && __BYTE_ORDER == 4321
+  	/* Take big-endian into account. */
+	rhash_print(out, ctx, hash_id, RHPR_UPPERCASE | RHPR_REVERSE);  
+#else
 	rhash_print(out, ctx, hash_id, RHPR_UPPERCASE);
+#endif
 	rhash_free(ctx);
 	return out;
 }
