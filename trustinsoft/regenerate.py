@@ -41,13 +41,18 @@ not_64 = [
     "-U_M_X64",
 ]
 
+# No matter the architecture, the dynamically allocated addresses are always
+# aligned according to the DEFAULT_ALIGNMENT macro, which is a constant always
+# set to 64.
+DEFAULT_ALIGNMENT = 64
+
 # Architectures.
 machdeps = [
     {
         "machdep": "gcc_x86_32",
         "pretty_name": "little endian 32-bit (x86)",
         "fields": {
-            "address-alignment": 32,
+            "address-alignment": DEFAULT_ALIGNMENT,
             "cpp-extra-args": not_64
         }
     },
@@ -55,14 +60,14 @@ machdeps = [
         "machdep": "gcc_x86_64",
         "pretty_name": "little endian 64-bit (x86)",
         "fields": {
-            "address-alignment": 64
+            "address-alignment": DEFAULT_ALIGNMENT
         }
     },
     {
         "machdep": "gcc_ppc_32",
         "pretty_name": "big endian 32-bit (PPC32)",
         "fields": {
-            "address-alignment": 32,
+            "address-alignment": DEFAULT_ALIGNMENT,
             "cpp-extra-args": not_64
         },
     },
@@ -70,7 +75,7 @@ machdeps = [
         "machdep": "gcc_ppc_64",
         "pretty_name": "big endian 64-bit (PPC64)",
         "fields": {
-            "address-alignment": 64,
+            "address-alignment": DEFAULT_ALIGNMENT,
             "cpp-extra-args": not_64
         },
     },
@@ -105,7 +110,6 @@ def make_common_config():
             "-I.",
             "-Ilibrhash",
             "-DLOCALEDIR=\"/usr/local/share/locale\"",
-            # "-DNDEBUG", # This removes all the assertions!
             "-DRHASH_NO_ASM",
             "-DRHASH_XVERSION=0x01040000",
             "-UUSE_OPENSSL",
@@ -262,11 +266,11 @@ def make_rhash_main_test(rhash_main_test, machdep):
 
 librhash_tests = [
     "test_all_known_strings",
-    # "test_long_strings",
+    # "test_long_strings", # This is too long, divided into separate cases.
     "test_results_consistency",
     "test_unaligned_messages_consistency",
     "test_magnet",
-    # "main",
+    # "main", # This is too long and redundant with the previous ones.
 ]
 
 def make_librhash_test(librhash_test, machdep):

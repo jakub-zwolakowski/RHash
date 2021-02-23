@@ -41,7 +41,8 @@ int posix_memalign(void **memptr, size_t alignment, size_t size) {
 #include <string.h>
 
 void *aligned_alloc(size_t alignment, size_t size) {
-  void *ptr = malloc(size + alignment);
-  memset(ptr, 0, size + alignment);
+  size_t aligned_size = ((size + alignment - 1) / alignment) * alignment;
+  void *ptr = malloc(aligned_size);
+  memset(ptr, 0, aligned_size);
   return ptr;
 }

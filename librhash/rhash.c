@@ -133,12 +133,7 @@ static rhash rhash_init_multi(size_t count, unsigned hash_ids[])
 		info = &rhash_info_table[hash_index];
 		assert(info->context_size > 0);
 		assert(info->init != NULL);
-	#ifndef __TRUSTINSOFT_HELPER__
-		/* IS_PTR_ALIGNED_BY cannot be implemented without an UB. Here: 
-		   - "ptr - 0" is an UB,
-		   - if we ignore it we still cause a signed overflow UB. */
 		assert(IS_PTR_ALIGNED_BY(phash_ctx, DEFAULT_ALIGNMENT)); /* hash context is aligned */
-	#endif
 		rctx->vector[i].hash_info = info;
 		rctx->vector[i].context = phash_ctx;
 

@@ -29,7 +29,12 @@ extern "C" {
 #define ALIGN_SIZE_BY(size, align) (((size) + ((align) - 1)) & ~((align) - 1))
 #define ALIGN_PTR_BY(ptr, align) ((char*)(ptr) + (((char*)0 - (char*)(ptr)) & ((align) - 1))))
 #define IS_SIZE_ALIGNED_BY(size, align) (((size) & ((align) - 1)) == 0)
+#ifdef __TRUSTINSOFT_BUGFIX__
+/*  "ptr - 0" is an UB */
+#define IS_PTR_ALIGNED_BY(ptr, align) IS_SIZE_ALIGNED_BY((uintptr_t)(ptr), (align))
+#else
 #define IS_PTR_ALIGNED_BY(ptr, align) IS_SIZE_ALIGNED_BY((char*)(ptr) - (char*)0, (align))
+#endif
 
 /* define rhash_aligned_alloc() and rhash_aligned_free() */
 #if defined(_WIN32) || defined(__CYGWIN__)
