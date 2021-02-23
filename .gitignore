@@ -27,3 +27,4 @@ tis_symbols.tbl
 *_generated.json
 __vfs-tis-*.[c|h]
 __pycache__
+.vscode
