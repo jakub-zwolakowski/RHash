@@ -43,6 +43,6 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 void *aligned_alloc(size_t alignment, size_t size) {
   size_t aligned_size = ((size + alignment - 1) / alignment) * alignment;
   void *ptr = malloc(aligned_size);
-  memset(ptr, 0, aligned_size);
+  // memset(ptr, 0, aligned_size);
   return ptr;
 }
