@@ -81,8 +81,13 @@ extern "C" {
 # define __has_builtin(x) 0
 #endif
 
+#ifdef __TRUSTINSOFT_BUGFIX__
+#define IS_ALIGNED_32(p) (0 == (3 & ((uintptr_t)(p))))
+#define IS_ALIGNED_64(p) (0 == (7 & ((uintptr_t)(p))))
+#else
 #define IS_ALIGNED_32(p) (0 == (3 & ((const char*)(p) - (const char*)0)))
 #define IS_ALIGNED_64(p) (0 == (7 & ((const char*)(p) - (const char*)0)))
+#endif
 
 #if defined(_MSC_VER)
 #define ALIGN_ATTR(n) __declspec(align(n))
