@@ -81,12 +81,12 @@ extern "C" {
 # define __has_builtin(x) 0
 #endif
 
-#ifndef __TRUSTINSOFT_ANALYZER__
+#ifdef __TRUSTINSOFT_ANALYZER__
+#define IS_ALIGNED_32(p) (0 == (3 & ((uintptr_t)(p))))
+#define IS_ALIGNED_64(p) (0 == (7 & ((uintptr_t)(p))))
+#else
 #define IS_ALIGNED_32(p) (0 == (3 & ((const char*)(p) - (const char*)0)))
 #define IS_ALIGNED_64(p) (0 == (7 & ((const char*)(p) - (const char*)0)))
-#else
-#define IS_ALIGNED_32(p) (0)
-#define IS_ALIGNED_64(p) (0)
 #endif
 
 #if defined(_MSC_VER)
@@ -129,7 +129,9 @@ void rhash_swap_copy_u64_to_str(void* to, const void* from, size_t length);
 void rhash_u32_mem_swap(unsigned* p, int length_in_u32);
 
 /* bswap definitions */
-#ifndef __TRUSTINSOFT_ANALYZER__
+#ifdef __TRUSTINSOFT_ANALYZER__
+#include "trustinsoft/byteswap.h"
+#else
 #if (defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3)) || \
     (defined(__clang__) && __has_builtin(__builtin_bswap32) && __has_builtin(__builtin_bswap64))
 /* GCC >= 4.3 or clang */
@@ -162,8 +164,6 @@ static RHASH_INLINE uint64_t bswap_64(uint64_t x)
 	return r.ll;
 }
 #endif /* bswap definitions */
-#else
-#include "trustinsoft/byteswap.h"
 #endif /* __TRUSTINSOFT_ANALYZER__ */
 
 #if IS_BIG_ENDIAN
