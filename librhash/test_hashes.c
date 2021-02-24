@@ -809,7 +809,6 @@ static void test_long_strings(void)
 #if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS)
 static void tis_test_long_strings(void)
 {
-	unsigned count;
 	printf("test_long_strings\n");
 	printf("- name: %s\n", HASH_NAME);
 	printf("- hash id: %d\n", HASH_ID);
