@@ -605,6 +605,9 @@ static void assert_hash_long_msg(unsigned hash_id, const char* msg_chunk, size_t
 		if (msg_name) log_message("failed: %s(%s) = %s, expected %s\n", hash_name, msg_name, result, hash);
 		else log_message("failed: %s(\"%s\") = %s, expected %s\n", hash_name, msg_chunk, result, hash);
 		g_errors++;
+#ifdef __TRUSTINSOFT_ANALYZER__
+		exit(1);
+#endif
 	}
 }
 
@@ -782,6 +785,21 @@ static void test_long_strings(void)
 	assert_rep_hash(RHASH_AICH, 0, 9728000 * 5, "EZCO3XF2RJ4FERRDEXGOSSRGL5NA5BBM", 0);
 #endif
 }
+
+#if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS)
+static void tis_test_long_strings(void)
+{
+	printf("test_long_strings\n");
+	printf("- name: %s\n", HASH_NAME);
+	printf("- hash id: %d\n", HASH_ID);
+	printf("- ch: %c\n", CH);
+	printf("- msg_size: %d\n", MSG_SIZE);
+	printf("- set_filename: %d\n", SET_FILENAME);
+	printf("- expected hash: %s\n", EXPECTED_HASH);
+	printf("RUN!\n");
+	assert_rep_hash(HASH_ID, CH, MSG_SIZE, EXPECTED_HASH, SET_FILENAME);
+}
+#endif
 
 /**
  * Verify for all algorithms, that rhash_final() returns the same result as
