@@ -362,7 +362,11 @@ static void bt_bencode_pieces(torrent_ctx* ctx)
 	{
 		memcpy(p, ctx->hash_blocks.array[i],
 			(size < BT_BLOCK_SIZE ? size : BT_BLOCK_SIZE) * BT_HASH_SIZE);
+	#ifdef __TRUSTINSOFT_TMPBUG__
+		if (size > BT_BLOCK_SIZE) p += BT_BLOCK_SIZE * BT_HASH_SIZE;
+	#else
 		p += BT_BLOCK_SIZE * BT_HASH_SIZE;
+	#endif
 	}
 }
 
