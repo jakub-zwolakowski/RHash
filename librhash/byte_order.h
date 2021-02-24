@@ -4,7 +4,7 @@
 #include "ustd.h"
 #include <stdlib.h>
 
-#if defined(__GLIBC__)
+#if defined(__GLIBC__) || defined(__TRUSTINSOFT_ANALYZER__)
 # include <endian.h>
 #endif
 #if defined(__FreeBSD__) || defined(__DragonFly__) || defined(__APPLE__)
@@ -124,6 +124,9 @@ void rhash_swap_copy_u64_to_str(void* to, const void* from, size_t length);
 void rhash_u32_mem_swap(unsigned* p, int length_in_u32);
 
 /* bswap definitions */
+#ifdef __TRUSTINSOFT_ANALYZER__
+#include "trustinsoft/byteswap.h"
+#else
 #if (defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3)) || \
     (defined(__clang__) && __has_builtin(__builtin_bswap32) && __has_builtin(__builtin_bswap64))
 /* GCC >= 4.3 or clang */
@@ -156,6 +159,7 @@ static RHASH_INLINE uint64_t bswap_64(uint64_t x)
 	return r.ll;
 }
 #endif /* bswap definitions */
+#endif /* __TRUSTINSOFT_ANALYZER__ */
 
 #if IS_BIG_ENDIAN
 # define be2me_32(x) (x)
@@ -193,7 +197,8 @@ static RHASH_INLINE uint64_t bswap_64(uint64_t x)
 #define CPU_FEATURE_SSE4_2 (52)
 
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)) \
-	&& (defined(CPU_X64) || defined(CPU_IA32))
+	&& (defined(CPU_X64) || defined(CPU_IA32)) \
+	&& !defined(__TRUSTINSOFT_ANALYZER__)
 # define HAS_INTEL_CPUID
 int has_cpu_feature(unsigned feature_bit);
 #else
