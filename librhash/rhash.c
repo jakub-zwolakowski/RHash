@@ -80,7 +80,13 @@ static rhash rhash_init_multi(size_t count, unsigned hash_ids[])
 {
 	struct rhash_hash_info* info;   /* hash algorithm information */
 	rhash_context_ext* rctx = NULL; /* allocated rhash context */
+#ifdef __TRUSTINSOFT_BUGFIX__
+    /* No minus one when the vector field of the rhash_context_ext structure
+	   is a flexible array member. */
+	const size_t header_size = GET_ALIGNED_SIZE(sizeof(rhash_context_ext) + sizeof(rhash_vector_item) * count);
+#else
 	const size_t header_size = GET_ALIGNED_SIZE(sizeof(rhash_context_ext) + sizeof(rhash_vector_item) * (count - 1));
+#endif
 	size_t ctx_size_sum = 0;   /* size of hash contexts to store in rctx */
 	size_t i;
 	char* phash_ctx;
