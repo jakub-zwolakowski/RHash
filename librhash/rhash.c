@@ -81,8 +81,7 @@ static rhash rhash_init_multi(size_t count, unsigned hash_ids[])
 	struct rhash_hash_info* info;   /* hash algorithm information */
 	rhash_context_ext* rctx = NULL; /* allocated rhash context */
 #ifdef __TRUSTINSOFT_BUGFIX__
-    /* Why the minus one here? The Flexible Array Member's size is not counted
-	   into the size of the structure at all. */
+    /* Why the minus one here? */
 	const size_t header_size = GET_ALIGNED_SIZE(sizeof(rhash_context_ext) + sizeof(rhash_vector_item) * count);
 #else
 	const size_t header_size = GET_ALIGNED_SIZE(sizeof(rhash_context_ext) + sizeof(rhash_vector_item) * (count - 1));
@@ -117,7 +116,12 @@ static rhash rhash_init_multi(size_t count, unsigned hash_ids[])
 		return NULL;
 
 	/* initialize common fields of the rhash context */
+#ifdef __TRUSTINSOFT_ANALYZER__
+    /* Initialize everything just in case. */
+	memset(rctx, 0, GET_ALIGNED_SIZE(header_size + ctx_size_sum));
+#else
 	memset(rctx, 0, header_size);
+#endif
 	rctx->rc.hash_id = hash_bitmask;
 	rctx->flags = RCTX_AUTO_FINAL; /* turn on auto-final by default */
 	rctx->state = STATE_ACTIVE;
