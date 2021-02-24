@@ -60,7 +60,7 @@ machdeps = [
         "machdep": "gcc_x86_64",
         "pretty_name": "little endian 64-bit (x86)",
         "fields": {
-            "address-alignment": DEFAULT_ALIGNMENT
+            "address-alignment": DEFAULT_ALIGNMENT,
         }
     },
     {
@@ -107,6 +107,7 @@ def make_common_config():
         "prefix_path": "..",
         "files": ["trustinsoft/stub.c"] + files,
         "cpp-extra-args": [
+            "-U__BYTE_ORDER__", # __BYTE_ORDER is the right one.
             "-Dvolatile=",
             "-I.",
             "-Ilibrhash",
