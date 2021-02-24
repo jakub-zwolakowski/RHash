@@ -585,23 +585,8 @@ static char* repeat_hash(unsigned hash_id, const char* chunk, size_t chunk_size,
 	rhash_final(ctx, 0);
 #if defined(__TRUSTINSOFT_BUGFIX__) && \
     defined(__BYTE_ORDER) && __BYTE_ORDER == 4321
-  	/* Take big-endian into account. */
 	/* Reverse byte-by-byte by adding the RHPR_REVERSE flag. */
-	size_t result_length =
-		rhash_print(out, ctx, hash_id, RHPR_UPPERCASE | RHPR_REVERSE);
-	/* Reverse 32-bit words. */
-	assert(result_length % 8 == 0);
-	char *p = out;
-	char *r = out + result_length - 8;
-	char tmp;
-	for (; p < r; p += 8, r -= 8) {
-		int i;
-		for(i = 0; i < 8; i++) {
-			tmp = *(p + i);
-			*(p + i) = *(r + i);
-			*(r + i) = tmp;
-		}
-	}
+	rhash_print(out, ctx, hash_id, RHPR_UPPERCASE | RHPR_REVERSE);
 #else
 	rhash_print(out, ctx, hash_id, RHPR_UPPERCASE);
 #endif
