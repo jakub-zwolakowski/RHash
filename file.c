@@ -62,8 +62,13 @@ static const char* get_basename(const char* path)
 	const char* p;
 	if (!path)
 		return NULL;
+#ifdef __TRUSTINSOFT_BUGFIX__
+	for (p = path + strlen(path); p > path && !IS_PATH_SEPARATOR(*(p - 1)); p--);
+	return p;
+#else
 	for (p = path + strlen(path) - 1; p >= path && !IS_PATH_SEPARATOR(*p); p--);
 	return (p + 1);
+#endif
 }
 
 /**
