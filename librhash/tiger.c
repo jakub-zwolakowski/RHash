@@ -167,6 +167,9 @@ void rhash_tiger_update(tiger_ctx* ctx, const unsigned char* msg, size_t size)
 	if (index) {
 		size_t left = tiger_block_size - index;
 		if (size < left) {
+		#ifdef __TRUSTINSOFT_BUGFIX__
+			if (size > 0)
+		#endif
 			memcpy(ctx->message + index, msg, size);
 			return;
 		} else {
