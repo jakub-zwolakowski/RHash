@@ -107,6 +107,7 @@ def make_common_config():
         "prefix_path": "..",
         "files": ["trustinsoft/stub.c"] + files,
         "cpp-extra-args": [
+            "-U__BYTE_ORDER__", # __BYTE_ORDER is the right one.
             "-Dvolatile=",
             "-I.",
             "-Ilibrhash",
