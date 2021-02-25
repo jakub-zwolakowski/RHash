@@ -60,7 +60,7 @@ machdeps = [
         "machdep": "gcc_x86_64",
         "pretty_name": "little endian 64-bit (x86)",
         "fields": {
-            "address-alignment": DEFAULT_ALIGNMENT
+            "address-alignment": DEFAULT_ALIGNMENT,
         }
     },
     {
