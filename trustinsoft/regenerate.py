@@ -253,7 +253,7 @@ rhash_main_tests = [
                 }
             ]
         },
-        "val-args": "~-c~\"test-empty.file\"",
+        "val-args": "~-c~test-empty.file",
     },
     {
         "name": "test %x, %b, %B modifiers",
