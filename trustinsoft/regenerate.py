@@ -200,7 +200,11 @@ rhash_main_tests = [
                 {
                     "from": "trustinsoft/inputs/test1K.data_GOST_result",
                     "name": "tis-mkfs-stdin",
-                }
+                },
+                {
+                    "from": "tests/test1K.data",
+                    "name": "test1K.data",
+                },
             ]
         },
         "val-args": "~-vc~-",
@@ -431,7 +435,7 @@ long_strings_tests = [
 
 
 def make_tis_test_long_strings(case, machdep):
-    test_hashes_C_path = path.join("librhash", "test_hashes.c")
+    # test_hashes_C_path = path.join("librhash", "test_hashes.c")
     test = make_librhash_test("test_long_strings", machdep)
     test["name"] = "%s : %s, %s" % (
         "test_long_strings", case["hash_id"], machdep["pretty_name"])
