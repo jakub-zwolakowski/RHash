@@ -108,6 +108,8 @@ def make_common_config():
         "files": ["trustinsoft/stub.c"] + files,
         "cpp-extra-args": [
             "-U__BYTE_ORDER__", # "__BYTE_ORDER" is the right one.
+            "-D__GLIBC__=1",
+            "-U__clang__",
             "-Dvolatile=",
             "-I.",
             "-Ilibrhash",
@@ -115,7 +117,6 @@ def make_common_config():
             "-DRHASH_NO_ASM",
             "-DRHASH_XVERSION=0x01040000",
             "-UUSE_OPENSSL",
-            "-D__GLIBC__",
         ],
         "val-warn-harmless-function-pointers": False,
     }
