@@ -129,10 +129,8 @@ void rhash_swap_copy_u64_to_str(void* to, const void* from, size_t length);
 void rhash_u32_mem_swap(unsigned* p, int length_in_u32);
 
 /* bswap definitions */
-#ifdef __TRUSTINSOFT_ANALYZER__
-#include "trustinsoft/byteswap.h"
-#elif (defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3)) || \
-      (defined(__clang__) && __has_builtin(__builtin_bswap32) && __has_builtin(__builtin_bswap64))
+#if (defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC__ > 4 || __GNUC_MINOR__ >= 3)) || \
+    (defined(__clang__) && __has_builtin(__builtin_bswap32) && __has_builtin(__builtin_bswap64))
 /* GCC >= 4.3 or clang */
 # define bswap_32(x) __builtin_bswap32(x)
 # define bswap_64(x) __builtin_bswap64(x)
