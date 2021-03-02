@@ -32,7 +32,8 @@ args = parser.parse_args()
 # Directories.
 common_config_path = path.join("trustinsoft", "common.config")
 
-not_64 = [
+# List of macros to undefine if we are not on a 64-bit little-endian architecture.
+not_64_little_endian = [
     "-U_LP64",
     "-U__LP64__",
     "-U__x86_64",
@@ -41,9 +42,9 @@ not_64 = [
     "-U_M_X64",
 ]
 
-# No matter the architecture, the dynamically allocated addresses are always
-# aligned according to the DEFAULT_ALIGNMENT macro, which is a constant always
-# set to 64.
+# No matter the architecture, the dynamically allocated addresses in RHash seem
+# to be are always aligned according to the DEFAULT_ALIGNMENT macro, which is a
+# constant set to 64.
 DEFAULT_ALIGNMENT = 64
 
 # Architectures.
@@ -53,7 +54,7 @@ machdeps = [
         "pretty_name": "little endian 32-bit (x86)",
         "fields": {
             "address-alignment": DEFAULT_ALIGNMENT,
-            "cpp-extra-args": not_64
+            "cpp-extra-args": not_64_little_endian
         }
     },
     {
@@ -68,7 +69,7 @@ machdeps = [
         "pretty_name": "big endian 32-bit (PPC32)",
         "fields": {
             "address-alignment": DEFAULT_ALIGNMENT,
-            "cpp-extra-args": not_64
+            "cpp-extra-args": not_64_little_endian
         },
     },
     {
@@ -76,7 +77,7 @@ machdeps = [
         "pretty_name": "big endian 64-bit (PPC64)",
         "fields": {
             "address-alignment": DEFAULT_ALIGNMENT,
-            "cpp-extra-args": not_64
+            "cpp-extra-args": not_64_little_endian
         },
     },
 ]
@@ -107,7 +108,7 @@ def make_common_config():
         "prefix_path": "..",
         "files": ["trustinsoft/stub.c"] + files,
         "cpp-extra-args": [
-            "-U__BYTE_ORDER__", # "__BYTE_ORDER" is the right one.
+            "-U__BYTE_ORDER__",  # "__BYTE_ORDER" is the right one.
             "-D__GLIBC__=1",
             "-U__clang__",
             "-Dvolatile=",
@@ -127,9 +128,9 @@ with open(common_config_path, "w") as file:
     print("3. Generate the '%s' file." % common_config_path)
     file.write(tis.string_of_json(common_config))
 
-# ---------------------------------------------------------------------------- #
-# ------------------ GENERATE trustinsoft/<machdep>.config ------------------- #
-# ---------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+# ------------------ GENERATE trustinsoft/<machdep>.config ------------------ #
+# --------------------------------------------------------------------------- #
 
 
 def make_machdep_config(machdep):

@@ -1,4 +1,3 @@
-
 void tis_signal_handler(int sig) {
   return;
 }
@@ -11,7 +10,6 @@ void (*signal(int sig, void (*func)(int)))(int) {
 
 #define __CURRENT_TIME 1466335969L
 
-/* The libc 'time' function stub. */
 time_t time(time_t *timer) {
   return __CURRENT_TIME;
 }
@@ -28,11 +26,8 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
   return 0;
 }
 
-#include <string.h>
-
 void *aligned_alloc(size_t alignment, size_t size) {
   size_t aligned_size = ((size + alignment - 1) / alignment) * alignment;
   void *ptr = malloc(aligned_size);
-  // memset(ptr, 0, aligned_size);
   return ptr;
 }
