@@ -155,6 +155,18 @@ for machdep_config in machdep_configs:
 # --------------------------- GENERATE tis.config --------------------------- #
 # --------------------------------------------------------------------------- #
 
+# Tests:
+# 1. Tests extracted by hand from tests/test_rhash.sh
+# 2. Tests from librhash/test_hashes.c
+#    a) All test_* functions, excluding test_long_strings, used directly as
+#       entry points:
+#       - test_all_known_strings
+#       - test_results_consistency
+#       - test_unaligned_messages_consistency
+#       - test_magnet
+#    b) Function test_long_strings tested separately for all original cases
+#       shortened (from size 1.000.000 to 10.000).
+
 rhash_main_tests = [
     {
         "name": "test with a text string",
@@ -285,7 +297,6 @@ librhash_tests = [
     "test_results_consistency",
     "test_unaligned_messages_consistency",
     "test_magnet",
-    # "main", # This is too long and redundant with the previous ones.
 ]
 
 
@@ -404,6 +415,14 @@ long_strings_tests = [
     {
         "hash_id": "EDONR512",
         "expected_hash": "38D648FCB9F9146B235A68090B4A5A1250457B9B1296CA879FC41FC9621872F42AF951ADDA34895379CF9183E2141D0BABB70BFB2F1A44F332800F9E506B6A9C"
+    },
+    {
+        "hash_id": "BLAKE2S",
+        "expected_hash": "B991C3170FDDFE4C1E3674E0674FAFD6D93B1D59E7674857761450527282216F",
+    },
+    {
+        "hash_id": "BLAKE2B",
+        "expected_hash": "CE848964DB0EC8441DCA3DFFBECE84AD44EDA43C524C3EC88C9BBEF744019C04243342EFC05EAED1004DB2D80C0117AE6F7C3BEF7B49970C9C524A9927022FEA",
     },
     {
         "hash_id": "GOST12_256",
