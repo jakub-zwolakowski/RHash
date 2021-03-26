@@ -29,18 +29,46 @@ args = parser.parse_args()
 # -------------------------------- SETTINGS --------------------------------- #
 # --------------------------------------------------------------------------- #
 
-# Directories.
 common_config_path = path.join("trustinsoft", "common.config")
 
 # List of macros to undefine if we are not on a 64-bit little-endian architecture.
-not_64_little_endian = [
-    "-U_LP64",
-    "-U__LP64__",
-    "-U__x86_64",
-    "-U__x86_64__",
-    "-U_M_AMD64",
-    "-U_M_X64",
-]
+not_x86_64 = list(map(
+    lambda x: ("-U" + x),
+    [
+        "_LP64",
+        "__LP64__",
+        "__x86_64",
+        "__x86_64__",
+        "_M_AMD64",
+        "_M_X64",
+    ]))
+
+not_x86_compatible = list(map(
+    lambda x: ("-U" + x),
+    [
+        "i386",
+        "__i386__",
+        "__i486__",
+        "__i586__",
+        "__i686__",
+        "__pentium__",
+        "__pentiumpro__",
+        "__pentium4__",
+        "__nocona__",
+        "prescott",
+        "__core2__",
+        "__k6__",
+        "__k8__",
+        "__athlon__",
+        "__amd64",
+        "__amd64__",
+        "__x86_64",
+        "__x86_64__",
+        "_M_IX86",
+        "_M_AMD64",
+        "_M_IA64",
+        "_M_X64",
+    ]))
 
 # No matter the architecture, the dynamically allocated addresses in RHash seem
 # to be are always aligned according to the DEFAULT_ALIGNMENT macro, which is a
@@ -54,7 +82,7 @@ machdeps = [
         "pretty_name": "little endian 32-bit (x86)",
         "fields": {
             "address-alignment": DEFAULT_ALIGNMENT,
-            "cpp-extra-args": not_64_little_endian
+            "cpp-extra-args": not_x86_64
         }
     },
     {
@@ -69,7 +97,7 @@ machdeps = [
         "pretty_name": "big endian 32-bit (PPC32)",
         "fields": {
             "address-alignment": DEFAULT_ALIGNMENT,
-            "cpp-extra-args": not_64_little_endian
+            "cpp-extra-args": not_x86_compatible + not_x86_64
         },
     },
     {
@@ -77,7 +105,7 @@ machdeps = [
         "pretty_name": "big endian 64-bit (PPC64)",
         "fields": {
             "address-alignment": DEFAULT_ALIGNMENT,
-            "cpp-extra-args": not_64_little_endian
+            "cpp-extra-args": not_x86_compatible + not_x86_64
         },
     },
 ]
@@ -297,17 +325,23 @@ librhash_tests = [
     "test_results_consistency",
     "test_unaligned_messages_consistency",
     "test_magnet",
+    "test_chunk_size_consistency",
+    "test_endianness",
+    "test_version_sanity",
+    "test_generic_assumptions",
 ]
 
 
 def make_librhash_test(librhash_test, machdep):
     test_hashes_C_path = path.join("librhash", "test_hashes.c")
+    test_hashes_ACSL_path = path.join("trustinsoft", "test_hashes.acsl")
     return {
         "name": "%s : %s, %s" % (test_hashes_C_path, librhash_test, machdep["pretty_name"]),
         "main": librhash_test,
         "files": [test_hashes_C_path],
         "include": common_config_path,
-        "include_": path.join("trustinsoft", "%s.config" % machdep["machdep"])
+        "include_": path.join("trustinsoft", "%s.config" % machdep["machdep"]),
+        "acsl-import": test_hashes_ACSL_path,
     }
 
 

@@ -649,9 +649,6 @@ static void assert_hash_long_msg(unsigned hash_id, const char* data, size_t chun
 		else
 			log_message("failed: %s(\"%s\") = %s, expected %s\n", hash_name, data, result, hash);
 		g_errors++;
-#ifdef __TRUSTINSOFT_ANALYZER__
-		exit(1);
-#endif
 	}
 }
 
@@ -847,6 +844,7 @@ static void test_long_strings(void)
 }
 
 #if defined(__TRUSTINSOFT_ANALYZER__) && defined(TEST_LONG_STRINGS)
+/*@ ensures no_errors: g_errors == 0; */
 static void tis_test_long_strings(void)
 {
 	printf("test_long_strings\n");

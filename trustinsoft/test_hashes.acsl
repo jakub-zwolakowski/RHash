@@ -1,0 +1,35 @@
+function test_all_known_strings:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_long_strings:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_results_consistency:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_unaligned_messages_consistency:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_magnet:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_chunk_size_consistency:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_endianness:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_version_sanity:
+  contract:
+    ensures no_errors: g_errors == 0;
+
+function test_generic_assumptions:
+  contract:
+    ensures no_errors: g_errors == 0;
