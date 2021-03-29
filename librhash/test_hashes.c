@@ -855,7 +855,8 @@ static void tis_test_long_strings(void)
 	printf("- set_filename: %d\n", SET_FILENAME);
 	printf("- expected hash: %s\n", EXPECTED_HASH);
 	printf("RUN!\n");
-	assert_rep_hash(HASH_ID, CH, MSG_SIZE, EXPECTED_HASH, SET_FILENAME);
+	unsigned flags = (SET_FILENAME ? CHDT_SET_FILENAME : CHDT_NO_FLAGS);
+	assert_rep_hash(HASH_ID, CH, MSG_SIZE, EXPECTED_HASH, flags);
 }
 #endif
 

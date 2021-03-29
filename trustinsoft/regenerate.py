@@ -468,12 +468,12 @@ long_strings_tests = [
     },
     {
         "hash_id": "BTIH",
-        "expected_hash": "D6C874BC44C9283DCD2EA64EC1F9BFC7B530EE20",
+        "expected_hash": "CE21481A7251F62CE2D74418F13E08453192D2C5",
         "set_filename": True
     },
     {
         "hash_id": "BTIH",
-        "expected_hash": "B99731F317F9FB4B5FA24D616B1EF5B59A063C1C"
+        "expected_hash": "1C580ECA0BA5DFBBFB8A303C8764EABA10420B0E" # This one was not verified in any way!
     },
     {
         "hash_id": "GOST94",
